@@ -1,0 +1,39 @@
+def subsidy_buggy(units, ration_card, member_above_80):
+    """Several separate if statements - a household can receive TWO subsidies."""
+    result = []
+    if units <= 100:
+        result.append("FULL")
+    if 101 <= units <= 200 and ration_card:
+        result.append("PARTIAL")
+    if units <= 200 and ration_card:        # developer's overlapping condition
+        result.append("PARTIAL")
+    if units > 200 and member_above_80:
+        result.append("SENIOR")
+    return result or ["NONE"]
+
+
+def subsidy_elif(units, ration_card, member_above_80):
+    """if-elif-else - exactly one decision is possible."""
+    if units <= 100:
+        return "FULL"
+    elif 101 <= units <= 200 and ration_card:
+        return "PARTIAL"
+    elif units > 200 and member_above_80:
+        return "SENIOR"
+    else:
+        return "NONE"
+
+
+households = [        # units, ration_card, member_above_80
+    (50, False, False), (50, True, False),
+    (150, False, False), (150, True, False),
+    (150, True, False), (150, False, False),
+    (250, False, True),
+]
+
+print(f"{'units':>5} | {'ration':>6} | {'80+':>3} | {'separate if':^11} | {'if-elif-else':^11}")
+print("-" * 48)
+
+for u, r, a in households:
+    print(f"{u:>5} | {str(r):>6} | {str(a):>3} | "
+          f"{str(subsidy_buggy(u, r, a)):^11} | {str(subsidy_elif(u, r, a)):^11}")
